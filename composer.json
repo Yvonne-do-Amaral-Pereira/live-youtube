@@ -1,10 +1,10 @@
 {
-    "name": "ceyap/api-lives-youtube",
+    "name": "ceyap/live-youtube",
     "type": "project",
     "authors": [
         {
             "name": "Ricardo Coelho",
-            "email": "ricardo@nexy.com.br"
+            "email": "ricardo@yap.org.br"
         }
     ],
     "autoload": {

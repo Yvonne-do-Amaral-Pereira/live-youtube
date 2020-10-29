@@ -8,7 +8,6 @@ define(
     'AUTH_FILENAME',
     'private/auth.json'
 );
-define('CHANNEL_ID', 'UCYe-QcCgU2DJEp_UH8Md-Ig');
 
 chdir(dirname(__DIR__));
 
@@ -26,7 +25,7 @@ if (file_exists('private/lastBroadcast.txt')) {
 }
 
 // Se tiver um ou mais ao vivo, mostra o que iniciou por último
-$activeBroadcasts = $broadcast->getLive(CHANNEL_ID);
+$activeBroadcasts = $broadcast->getLive('public');
 $dateLast = '1900-01-01';
 foreach ($activeBroadcasts as $item) {
     if ($dateLast < $item->scheduledStartTime) {
@@ -37,7 +36,7 @@ foreach ($activeBroadcasts as $item) {
 
 // Se não tiver nenhum ao vivo, mostra o próximo agendado
 if (empty($activeBroadcasts)) {
-    $upcomingBroadcasts = $broadcast->getUpcoming(CHANNEL_ID);
+    $upcomingBroadcasts = $broadcast->getUpcoming('public');
     $dateNext = '9999-99-99';
 
     foreach($upcomingBroadcasts as $item) {
@@ -49,4 +48,4 @@ if (empty($activeBroadcasts)) {
 }
 
 file_put_contents('private/lastBroadcast.txt', $broadcastId);
-echo("Location: https://www.youtube.com/watch?v={$broadcastId}");
+header("Location: https://www.youtube.com/watch?v={$broadcastId}");

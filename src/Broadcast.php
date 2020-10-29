@@ -7,7 +7,7 @@ class Broadcast {
     {
         $this->authorization = $authorization;
     }
-    private function list($broadcastStatus = 'active')
+    private function list($broadcastStatus = 'active', $privacyStatus)
     {
         $list = [];
 
@@ -31,38 +31,27 @@ class Broadcast {
             $result = json_decode($body);
 
             foreach ($result->items as $item) {
-                $list[] = (object) [
-                    'id' => $item->id,
-                    'channelId' => $item->snippet->channelId,
-                    'title' => $item->snippet->title,
-                    'scheduledStartTime' => $item->snippet->scheduledStartTime,
-                    'privacyStatus' => $item->status->privacyStatus,                    
-                ];
+                if ((! empty($privacyStatus)) && ($privacyStatus == $item->status->privacyStatus)) {
+                    $list[] = (object) [
+                        'id' => $item->id,
+                        'channelId' => $item->snippet->channelId,
+                        'title' => $item->snippet->title,
+                        'scheduledStartTime' => $item->snippet->scheduledStartTime,
+                        'privacyStatus' => $item->status->privacyStatus,
+                    ];
+                }
             }
         }
         return $list;
     }
-    private function filter($list, $channelId, $privacyStatus)
+    public function getLive($privacyStatus)
     {
-        $result = [];
-        foreach ($list as $item) {
-            if (($channelId == $item->channelId)
-                && ($privacyStatus == $item->privacyStatus)) {
-                $result[] = $item;
-            }
-        }
-        return $result;
-    }
-    public function getLive($channelId)
-    {
-        $list = $this->list('active');
-        $list = $this->filter($list, $channelId, 'public');
+        $list = $this->list('active', $privacyStatus);
         return $list;
     }
-    public function getUpcoming($channelId)
+    public function getUpcoming($privacyStatus)
     {
-        $list = $this->list('upcoming');
-        $list = $this->filter($list, $channelId, 'public');
+        $list = $this->list('upcoming', $privacyStatus);
         return $list;
     }
 }

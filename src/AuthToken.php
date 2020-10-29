@@ -44,7 +44,7 @@ class AuthToken {
         $auth = json_decode(file_get_contents($this->authFilename));
         if ($auth->created + $auth->expires_in < time() - 60) {
             $auth = $this->refreshToken($auth->refresh_token);
-            file_put_contents('private/auth.json', json_encode($auth));
+            file_put_contents($this->authFilename, json_encode($auth));
         }
         return "{$auth->token_type} {$auth->access_token}";
     }
